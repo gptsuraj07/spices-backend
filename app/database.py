@@ -1,4 +1,5 @@
 import os
+import certifi
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 
@@ -9,7 +10,12 @@ MONGODB_URI = os.getenv(
     "mongodb+srv://conceptraedu_db_user:FRk5gYmp4TVn6Xqm@cluster0.5q11fff.mongodb.net/aridhu_db?retryWrites=true&w=majority&appName=Cluster0"
 )
 
-client = AsyncIOMotorClient(MONGODB_URI)
+try:
+    ca = certifi.where()
+    client = AsyncIOMotorClient(MONGODB_URI, tlsCAFile=ca)
+except Exception:
+    client = AsyncIOMotorClient(MONGODB_URI)
+
 db = client.get_default_database("aridhu_db")
 
 # Helper functions to serialize MongoDB ObjectId / _id
