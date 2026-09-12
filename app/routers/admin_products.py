@@ -87,3 +87,22 @@ async def remove_product_image(id: str):
 
     updated_product = await db.products.find_one(query)
     return product_helper(updated_product)
+
+
+@router.put("/{id}", response_model=dict)
+async def update_product(id: str, data: dict):
+    """
+    Updates full product details in MongoDB and returns updated product.
+    """
+    query = build_product_query(id)
+    product = await db.products.find_one(query)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    update_data = {k: v for k, v in data.items() if k not in ["_id", "id"]}
+    if update_data:
+        await db.products.update_one(query, {"$set": update_data})
+
+    updated_product = await db.products.find_one(query)
+    return product_helper(updated_product)
+
