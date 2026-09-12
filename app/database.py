@@ -50,6 +50,7 @@ def category_helper(category) -> dict:
         "slug": category.get("slug"),
         "description": category.get("description", ""),
         "icon": category.get("icon", ""),
+        "imageUrl": category.get("imageUrl"),
         "displayOrder": category.get("displayOrder", 0),
     }
 
