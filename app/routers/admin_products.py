@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
+from fastapi import APIRouter, File, UploadFile, HTTPException, Depends, Body
 from bson import ObjectId
 from app.database import db, product_helper
 from app.services.r2_service import (
