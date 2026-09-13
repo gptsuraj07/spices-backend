@@ -124,11 +124,45 @@ async def update_order(id: str, updates: dict = Body(...)):
     now_str = datetime.utcnow().isoformat()
     updates["updatedAt"] = now_str
 
-    # Handle _historyEntry: append to statusHistory
+    # Extract & clean helpers/operators from updates payload
     history_entry = updates.pop("_historyEntry", None)
+    updates.pop("$push", None)
+    updates.pop("$set", None)
+
+    new_status = updates.get("status")
+
+    # Flatten nested dictionaries to dot notation so sibling properties aren't overwritten
+    flat_updates = {}
+    for k, v in updates.items():
+        if isinstance(v, dict) and k in ["payment", "fulfillment"]:
+            for sub_k, sub_v in v.items():
+                flat_updates[f"{k}.{sub_k}"] = sub_v
+        else:
+            flat_updates[k] = v
+
+    # Automatic payment status synchronization
+    if new_status == "PAYMENT_CONFIRMED":
+        flat_updates["payment.status"] = "PAID"
+        flat_updates["paymentStatus"] = "paid"
+    elif new_status in ["PAYMENT_FAILED", "CANCELLED"] and flat_updates.get("payment.status") != "PAID":
+        flat_updates["payment.status"] = "FAILED"
+        flat_updates["paymentStatus"] = "failed"
+    elif new_status == "DELIVERED":
+        flat_updates["fulfillment.deliveredAt"] = now_str
+    elif new_status == "SHIPPED":
+        if "fulfillment.shippedAt" not in flat_updates:
+            flat_updates["fulfillment.shippedAt"] = now_str
 
     query = build_query(id)
-    set_op = {"$set": updates}
+    set_op = {"$set": flat_updates}
+
+    # Automatically construct status history entry if not explicitly provided
+    if not history_entry and new_status:
+        history_entry = {
+            "status": new_status,
+            "timestamp": now_str,
+            "note": f"Order status updated to {new_status}"
+        }
 
     if history_entry:
         set_op["$push"] = {"statusHistory": history_entry}
