@@ -16,8 +16,13 @@ async def main():
         {"slug": "rasam"},
         {"$set": {"imageUrl": "/assets/aridhu-rasam-hero.jpg"}}
     )
+    res3 = await db.categories.update_one(
+        {"slug": "sambar"},
+        {"$set": {"imageUrl": "/assets/aridhu-sambar-hero.jpg"}}
+    )
     print(f"Kozhambu Matched {res1.matched_count}, Modified {res1.modified_count}")
     print(f"Rasam Matched {res2.matched_count}, Modified {res2.modified_count}")
+    print(f"Sambar Matched {res3.matched_count}, Modified {res3.modified_count}")
 
 if __name__ == "__main__":
     asyncio.run(main())
