@@ -26,6 +26,9 @@ class ProductSchema(BaseModel):
     featured: bool = False
     status: str = "active"
     imageUrl: Optional[str] = None
+    imagePosition: Optional[str] = "center center"
+    imageFit: Optional[str] = "contain"
+    imageScale: Optional[float] = 1.0
     shortDescription: Optional[str] = None
     description: Optional[str] = None
     usage: Optional[str] = None
