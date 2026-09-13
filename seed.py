@@ -14,14 +14,14 @@ categories = [
     {
         "name": "Rasam Powders",
         "slug": "rasam",
-        "description": "7-Day authentic South Indian daily Rasam ritual podis.",
+        "description": "authentic South Indian daily Rasam ritual podis.",
         "icon": "🥣",
         "displayOrder": 1,
     },
     {
         "name": "Kozhambu Powders",
         "slug": "kozhambu",
-        "description": "Traditional Tanjore gravy spice blends.",
+        "description": "Traditional South Indian gravy spice blends.",
         "icon": "🍲",
         "displayOrder": 2,
     },
@@ -45,7 +45,7 @@ products = [
         "status": "active",
         "imageUrl": "assets/images/kalyana-rasam.png",
         "shortDescription": "Festive Tamil wedding feast style rasam powder slow-roasted with Salem coriander and Tellicherry black pepper.",
-        "description": "Kalyana Rasam is the soul of Tanjore marriage banquets. Hand-roasted whole spices coarsely pounded to release rich festive essential oils.",
+        "description": "Kalyana Rasam is the soul of South Indian marriage banquets. Hand-roasted whole spices coarsely pounded to release rich festive essential oils.",
         "usage": "Add 1.5 tsp powder to 500ml tamarind water with fresh tomatoes and coriander.",
         "storage": "Store in an airtight ceramic or stainless steel container away from direct sunlight.",
         "recipe": {
@@ -68,7 +68,7 @@ products = [
                 "Add the cooked mashed toor dal along with 1.5 cups of water.",
                 "Simmer gently on low flame until a golden frothy foam covers the top. Do not boil hard.",
                 "Heat ghee in a tempering pan, pop mustard seeds, cumin, and curry leaves, then pour into the rasam.",
-                "Garnish with fresh coriander and cover immediately to seal in the Tanjore banquet aroma."
+                "Garnish with fresh coriander and cover immediately to seal in the festive banquet aroma."
             ],
             "tips": "Always switch off the flame as soon as rasam turns frothy on top to retain essential spice oils."
         },
@@ -110,7 +110,7 @@ products = [
         "featured": False,
         "status": "active",
         "imageUrl": "assets/images/elavangapattai-rasam.png",
-        "shortDescription": "Infused with sweet Ceylon cinnamon bark for a royal Tanjore aroma.",
+        "shortDescription": "Infused with sweet Ceylon cinnamon bark for a royal South Indian aroma.",
         "description": "Rare heritage blend pairing slow-roasted cinnamon bark with coriander and Guntur chillies.",
         "usage": "Boil with ripe tomatoes and tamarind extract; finish with chopped coriander.",
         "storage": "Aroma-sealed foil pouch.",
@@ -218,7 +218,7 @@ products = [
         "status": "active",
         "imageUrl": "assets/images/vatha-kozhambu.png",
         "shortDescription": "Intense tangy sesame-roasted gravy powder perfect for Sundakkai & Manathakkali vathal.",
-        "description": "Classic Tanjore style Vatha Kozhambu masala crafted with dark-roasted coriander, red chillies, and fenugreek.",
+        "description": "Classic South Indian style Vatha Kozhambu masala crafted with dark-roasted coriander, red chillies, and fenugreek.",
         "usage": "Sauté vathal in gingelly oil, add tamarind extract and 2 tbsp powder; simmer till oil separates.",
         "storage": "Cool dry pantry.",
         "inStock": True,
@@ -363,7 +363,7 @@ combos = [
         "itemCount": 7,
         "featured": True,
         "imageUrl": "assets/images/7-rasam-box.png",
-        "description": "Complete 7-day authentic Tanjore rasam ritual collection containing one 100g pack of each unique Rasam blend.",
+        "description": "Complete authentic South Indian rasam ritual collection containing one 100g pack of each unique Rasam blend.",
         "items": [
             {"productId": "r1", "productSlug": "kalyana-rasam-powder", "name": "Kalyana Rasam Powder", "tamilName": "கல்யாண ரசம்", "weight": 100},
             {"productId": "r2", "productSlug": "poricha-rasam-powder", "name": "Poricha Rasam Powder", "tamilName": "பொரிச்ச ரசம்", "weight": 100},
@@ -385,7 +385,7 @@ combos = [
         "itemCount": 7,
         "featured": True,
         "imageUrl": "assets/images/7-kozhambu-box.png",
-        "description": "Complete 7-day authentic Tanjore gravy collection containing one 100g pack of each signature Kozhambu masala.",
+        "description": "Complete authentic South Indian gravy collection containing one 100g pack of each signature Kozhambu masala.",
         "items": [
             {"productId": "k1", "productSlug": "vatha-kozhambu-powder", "name": "Vatha Kozhambu Powder", "tamilName": "வத்த குழம்பு", "weight": 100},
             {"productId": "k2", "productSlug": "pundu-kozhambu-powder", "name": "Pundu Kozhambu Powder", "tamilName": "பூண்டு குழம்பு", "weight": 100},
