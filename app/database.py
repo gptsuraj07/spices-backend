@@ -42,7 +42,7 @@ def product_helper(product) -> dict:
         "shortDescription": product.get("shortDescription", ""),
         "description": product.get("description", ""),
         "definition": product.get("definition", product.get("whatIsIt", "")),
-        "recipe": product.get("recipe", {}),
+        "recipe": product.get("recipe") if (isinstance(product.get("recipe"), dict) and any(v for v in product.get("recipe").values() if v)) else None,
         "usage": product.get("usage", ""),
         "storage": product.get("storage", ""),
         "inStock": product.get("inStock", True),
