@@ -48,6 +48,30 @@ products = [
         "description": "Kalyana Rasam is the soul of Tanjore marriage banquets. Hand-roasted whole spices coarsely pounded to release rich festive essential oils.",
         "usage": "Add 1.5 tsp powder to 500ml tamarind water with fresh tomatoes and coriander.",
         "storage": "Store in an airtight ceramic or stainless steel container away from direct sunlight.",
+        "recipe": {
+            "title": "Grand Wedding Feast Kalyana Rasam",
+            "prepTime": "5 mins",
+            "cookTime": "10 mins",
+            "servings": "3-4 Servings",
+            "ingredients": [
+                "1.5 tsp Aridhu Kalyana Rasam Powder",
+                "1 lemon-sized ball Tamarind (extracted in 2 cups water)",
+                "2 medium ripe Tomatoes (chopped)",
+                "1/2 cup cooked Toor Dal (mashed smoothly)",
+                "1 tsp Pure Ghee",
+                "1/2 tsp Mustard seeds & Cumin seeds",
+                "Fresh Curry leaves & chopped Coriander"
+            ],
+            "instructions": [
+                "Extract tamarind juice into a vessel. Add chopped tomatoes, salt, turmeric, and 1.5 tsp Aridhu Kalyana Rasam Powder.",
+                "Boil on medium heat for 7-8 minutes until raw tamarind aroma vanishes.",
+                "Add the cooked mashed toor dal along with 1.5 cups of water.",
+                "Simmer gently on low flame until a golden frothy foam covers the top. Do not boil hard.",
+                "Heat ghee in a tempering pan, pop mustard seeds, cumin, and curry leaves, then pour into the rasam.",
+                "Garnish with fresh coriander and cover immediately to seal in the Tanjore banquet aroma."
+            ],
+            "tips": "Always switch off the flame as soon as rasam turns frothy on top to retain essential spice oils."
+        },
         "inStock": True,
     },
     {

@@ -1,6 +1,15 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+class RecipeSchema(BaseModel):
+    title: Optional[str] = None
+    prepTime: Optional[str] = None
+    cookTime: Optional[str] = None
+    servings: Optional[str] = None
+    ingredients: List[str] = []
+    instructions: List[str] = []
+    tips: Optional[str] = None
+
 class ProductSchema(BaseModel):
     id: Optional[str] = None
     name: str
@@ -21,6 +30,7 @@ class ProductSchema(BaseModel):
     description: Optional[str] = None
     usage: Optional[str] = None
     storage: Optional[str] = None
+    recipe: Optional[RecipeSchema] = None
     inStock: bool = True
 
 class CategorySchema(BaseModel):
