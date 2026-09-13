@@ -89,6 +89,50 @@ async def remove_product_image(id: str):
     return product_helper(updated_product)
 
 
+@router.post("", response_model=dict)
+async def create_product(data: dict = Body(...)):
+    """
+    Creates a new product document in MongoDB and returns the created product.
+    """
+    import uuid
+    name = data.get("name", "New Product").strip()
+    slug = data.get("slug") or name.lower().replace(" ", "-")
+    slug = "".join(c if c.isalnum() or c == "-" else "" for c in slug)
+
+    prod_id = data.get("id") or f"prod-{uuid.uuid4().hex[:8]}"
+
+    new_doc = {
+        "id": prod_id,
+        "name": name,
+        "slug": slug,
+        "subtitle": data.get("subtitle", ""),
+        "tamilName": data.get("tamilName", ""),
+        "price": float(data.get("price", 0)),
+        "originalPrice": float(data.get("originalPrice")) if data.get("originalPrice") is not None else None,
+        "weight": int(data.get("weight", 100)),
+        "unit": data.get("unit", "g"),
+        "weightUnit": data.get("weightUnit", "g"),
+        "sku": data.get("sku") or f"ARI-{slug[:6].upper()}-100",
+        "stock": int(data.get("stock", 50)),
+        "categoryId": data.get("categoryId", "cat-rasam"),
+        "categorySlug": data.get("categorySlug") or data.get("categoryId", "cat-rasam").replace("cat-", ""),
+        "tags": data.get("tags", []),
+        "featured": bool(data.get("featured", False)),
+        "status": data.get("status", "active"),
+        "imageUrl": data.get("imageUrl"),
+        "shortDescription": data.get("shortDescription", ""),
+        "description": data.get("description", ""),
+        "recipe": data.get("recipe"),
+        "usage": data.get("usage", ""),
+        "storage": data.get("storage", ""),
+        "inStock": bool(data.get("inStock", True)),
+    }
+
+    result = await db.products.insert_one(new_doc)
+    created = await db.products.find_one({"_id": result.inserted_id})
+    return product_helper(created)
+
+
 @router.put("/{id}", response_model=dict)
 async def update_product(id: str, data: dict):
     """
