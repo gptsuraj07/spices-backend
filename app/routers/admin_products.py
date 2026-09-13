@@ -114,8 +114,14 @@ async def create_product(data: dict = Body(...)):
         "weightUnit": data.get("weightUnit", "g"),
         "sku": data.get("sku") or f"ARI-{slug[:6].upper()}-100",
         "stock": int(data.get("stock", 50)),
-        "categoryId": data.get("categoryId", "cat-rasam"),
-        "categorySlug": data.get("categorySlug") or data.get("categoryId", "cat-rasam").replace("cat-", ""),
+        "categoryId": data.get("categoryId", "cat-kozhambu"),
+        "categorySlug": data.get("categorySlug") or {
+            "cat-kozhambu": "kozhambu",
+            "cat-rasam": "rasam",
+            "cat-sambar": "sambar",
+            "cat-tiffin": "tiffin-mixes",
+            "cat-combos": "combos"
+        }.get(data.get("categoryId", "cat-kozhambu"), "kozhambu"),
         "tags": data.get("tags", []),
         "featured": bool(data.get("featured", False)),
         "status": data.get("status", "active"),
@@ -144,6 +150,17 @@ async def update_product(id: str, data: dict):
         raise HTTPException(status_code=404, detail="Product not found")
 
     update_data = {k: v for k, v in data.items() if k not in ["_id", "id"]}
+    if "categoryId" in update_data:
+        cat_id = update_data["categoryId"]
+        cat_slug_map = {
+            "cat-kozhambu": "kozhambu",
+            "cat-rasam": "rasam",
+            "cat-sambar": "sambar",
+            "cat-tiffin": "tiffin-mixes",
+            "cat-combos": "combos"
+        }
+        update_data["categorySlug"] = cat_slug_map.get(cat_id, cat_id.replace("cat-", ""))
+
     if update_data:
         await db.products.update_one(query, {"$set": update_data})
 

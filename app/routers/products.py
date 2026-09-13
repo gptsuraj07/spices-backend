@@ -18,10 +18,15 @@ async def get_products(
 ):
     query = {"status": status}
 
-    if categoryId:
-        query["categoryId"] = categoryId
-    if categorySlug:
-        query["categorySlug"] = categorySlug
+    if categoryId or categorySlug:
+        cat_conds = []
+        if categoryId:
+            cat_conds.append({"categoryId": categoryId})
+            cat_conds.append({"categorySlug": categoryId.replace("cat-", "")})
+        if categorySlug:
+            cat_conds.append({"categorySlug": categorySlug})
+            cat_conds.append({"categoryId": f"cat-{categorySlug}"})
+        query["$or"] = cat_conds
     if featured is not None:
         query["featured"] = featured
     if minPrice is not None or maxPrice is not None:
