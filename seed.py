@@ -403,23 +403,56 @@ async def seed():
     db = client.get_default_database("aridhu_db")
     print("Connected to MongoDB Atlas...")
 
-    # Clear existing collections
-    await db.categories.delete_many({})
-    await db.products.delete_many({})
-    await db.combos.delete_many({})
+    # Seed categories (upsert)
+    for cat in categories:
+        await db.categories.update_one(
+            {"slug": cat["slug"]},
+            {"$set": cat},
+            upsert=True
+        )
+    print("Categories updated/seeded.")
 
-    print("Cleared existing database collections...")
+    # Seed products without wiping uploaded R2 images or custom admin edits
+    for prod in products:
+        existing = await db.products.find_one({"$or": [{"slug": prod["slug"]}, {"id": prod.get("id")}]})
+        if existing:
+            # Preserve existing image if uploaded to R2/cloud or local storage
+            existing_img = existing.get("imageUrl")
+            if existing_img and (existing_img.startswith("http") or existing_img.startswith("/uploads")):
+                prod["imageUrl"] = existing_img
+            
+            # Preserve existing recipe if present and seed product doesn't override
+            existing_recipe = existing.get("recipe")
+            if existing_recipe and not prod.get("recipe"):
+                prod["recipe"] = existing_recipe
 
-    await db.categories.insert_many(categories)
-    print("Categories seeded (2)")
+            await db.products.update_one(
+                {"_id": existing["_id"]},
+                {"$set": prod}
+            )
+        else:
+            await db.products.insert_one(prod)
 
-    await db.products.insert_many(products)
-    print("Products seeded (14)")
+    print("Products updated/seeded.")
 
-    await db.combos.insert_many(combos)
-    print("Combo Collections seeded (2)")
+    # Seed combos (upsert)
+    for combo in combos:
+        await db.combos.update_one(
+            {"slug": combo["slug"]},
+            {"$set": combo},
+            upsert=True
+        )
+    print("Combos updated/seeded.")
 
-    print("Python MongoDB Atlas Seeding Complete!")
+    # Auto-restore all Cloudflare R2 images from bucket
+    try:
+        from restore_images import restore
+        print("\nSyncing images from Cloudflare R2 bucket...")
+        await restore()
+    except Exception as e:
+        print(f"R2 Sync warning during seed: {e}")
+
+    print("\nPython MongoDB Atlas Seeding & R2 Image Restore Complete!")
 
 if __name__ == "__main__":
     asyncio.run(seed())

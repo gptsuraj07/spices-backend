@@ -38,6 +38,14 @@ app.include_router(upload.router)
 app.include_router(admin_products.router)
 
 
+@app.on_event("startup")
+async def sync_r2_images_on_startup():
+    try:
+        from restore_images import restore
+        await restore()
+    except Exception as e:
+        print(f"R2 Auto-Sync Warning: {e}")
+
 @app.get("/api/health", tags=["Health"])
 async def health_check():
     return {
