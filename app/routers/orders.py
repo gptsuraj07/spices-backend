@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Body, BackgroundTasks
 from typing import List, Optional
 from datetime import datetime
 from bson import ObjectId
 from app.database import db, order_helper
+from app.email_service import send_order_emails_task
 import random
 
 router = APIRouter(prefix="/api/orders", tags=["Orders"])
@@ -32,7 +33,10 @@ def append_status_history(order_data: dict, entry: dict) -> None:
 # ── Create Order ─────────────────────────────────────────────
 
 @router.post("", response_model=dict)
-async def create_order(order_data: dict = Body(...)):
+async def create_order(
+    order_data: dict = Body(...),
+    background_tasks: BackgroundTasks = BackgroundTasks()
+):
     # Generate order number if not provided
     if not order_data.get("orderNumber"):
         order_data["orderNumber"] = generate_order_number()
@@ -66,7 +70,12 @@ async def create_order(order_data: dict = Body(...)):
 
     result = await db.orders.insert_one(order_data)
     created_order = await db.orders.find_one({"_id": result.inserted_id})
-    return order_helper(created_order)
+    serialized_order = order_helper(created_order)
+    
+    # Trigger Resend email notifications in background task after order is successfully saved
+    background_tasks.add_task(send_order_emails_task, serialized_order)
+
+    return serialized_order
 
 # ── Get All Orders ────────────────────────────────────────────
 
