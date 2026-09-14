@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 
 # Load Resend API Key from Environment
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
-ORDER_FROM_EMAIL = os.getenv("ORDER_FROM_EMAIL", "onboarding@resend.dev")
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "snmsss2002@gmail.com")
+ORDER_FROM_EMAIL = os.getenv("ORDER_FROM_EMAIL", "Aridhu Foods <orders@aridhufoods.com>")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "aridhu2026@gmail.com")
 
 if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
@@ -394,35 +394,20 @@ def send_order_confirmation_email(order: dict) -> bool:
     order_number = order.get("orderNumber", "")
     html_content = build_customer_email_html(order)
 
-    # In Resend sandbox mode, if sending to an unverified email address fails due to Resend restrictions,
-    # we fall back to sending to ADMIN_EMAIL so the test email is still received.
-    target_emails = [customer_email]
-
-    for target in target_emails:
-        try:
-            params = {
-                "from": ORDER_FROM_EMAIL,
-                "to": [target],
-                "subject": f"Order Confirmation - #{order_number} | Aridhu Foods",
-                "html": html_content,
-            }
-            logger.info(f"Attempting to send customer confirmation email for order #{order_number} to {target}")
-            response = resend.Emails.send(params)
-            logger.info(f"Customer confirmation email sent successfully for order #{order_number}. Resend ID: {response.get('id') if isinstance(response, dict) else response}")
-            return True
-        except Exception as e:
-            err_str = str(e)
-            logger.error(f"Failed to send customer confirmation email to {target}: {err_str}")
-            if ("can only send to your own email address" in err_str.lower() or "validation_error" in err_str.lower() or "testing" in err_str.lower()) and target != ADMIN_EMAIL and ADMIN_EMAIL:
-                logger.info(f"Resend sandbox policy restriction detected. Retrying customer confirmation email send to ADMIN_EMAIL ({ADMIN_EMAIL})")
-                try:
-                    params["to"] = [ADMIN_EMAIL]
-                    response = resend.Emails.send(params)
-                    logger.info(f"Customer confirmation email fallback sent to {ADMIN_EMAIL}. Resend ID: {response.get('id') if isinstance(response, dict) else response}")
-                    return True
-                except Exception as fallback_err:
-                    logger.error(f"Fallback customer email send to {ADMIN_EMAIL} failed: {fallback_err}")
-    return False
+    try:
+        params = {
+            "from": ORDER_FROM_EMAIL,
+            "to": [customer_email],
+            "subject": f"Order Confirmation - #{order_number} | Aridhu Foods",
+            "html": html_content,
+        }
+        logger.info(f"Attempting to send customer confirmation email for order #{order_number} to {customer_email}")
+        response = resend.Emails.send(params)
+        logger.info(f"Customer confirmation email sent successfully for order #{order_number}. Resend ID: {response.get('id') if isinstance(response, dict) else response}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send customer confirmation email for order #{order_number} to {customer_email}: {e}")
+        return False
 
 def send_admin_order_notification(order: dict) -> bool:
     """Send admin notification email for a newly placed order via Resend SDK."""
